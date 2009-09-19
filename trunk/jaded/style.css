@@ -803,6 +803,7 @@ div.Header-jpeg
 	margin:0 auto;
 	min-width:1px;
 	min-height:1px;
+	
 }
 
 .Post-body
@@ -814,7 +815,7 @@ div.Header-jpeg
 
 .Post
 {
-	margin: 10px;
+	margin: 0 10px 10px;
 }
 
 /* Start images */
@@ -1122,6 +1123,7 @@ blockquote
 	border-color: #CED1B8;
 	border-style: solid;
 	border-width: 1px;
+	display:none;
 }
 /* end PostMetadata */
 
