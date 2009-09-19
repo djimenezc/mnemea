@@ -38,8 +38,8 @@
                 <a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><img src="<?php print $logo ?>" alt="<?php print t('Home') ?>" /></a>
               <?php endif; ?>
             </div>
-            <div class="Header-request"><a href=""><?php echo htmlentities("Solicitar información") ?><!a></div>
-            <div class="Header-access"><a href=""><?php echo htmlentities("Acceder a nuestra red") ?><!a></div>
+            <div class="Header-request"><a href="./contact"><?php echo htmlentities("Solicitar información") ?><!a></div>
+            <div class="Header-access"><a href="./access"><?php echo htmlentities("Acceder a nuestra red") ?><!a></div>
           </div>
           <?php if ($navigation): ?>
             <div class="nav">
@@ -79,7 +79,7 @@
           <div class="cleared"></div>
           <div class="Footer">
             <div class="Footer-inner">
-              <a href="<?php $feedsUrls = array_keys(drupal_add_feed()); if(isset($feedsUrls[0]) && strlen($feedsUrls[0])>0) {echo $feedsUrls[0];} ?>" class="rss-tag-icon" title="RSS"></a>
+             <!-- <a href="<?php $feedsUrls = array_keys(drupal_add_feed()); if(isset($feedsUrls[0]) && strlen($feedsUrls[0])>0) {echo $feedsUrls[0];} ?>" class="rss-tag-icon" title="RSS"></a>-->
               <div class="Footer-text">
                 <?php if (!empty($footer)) { echo $footer; } ?>
               </div>
