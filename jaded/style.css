@@ -425,9 +425,10 @@ div.Header-jpeg
 
 .artmenu a .t 
 {
-	font-family: Arial, Helvetica, Sans-Serif;
-	font-size: 13px;
-	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
 	padding: 0 19px;
 	margin: 0 4px;
 	line-height: 30px;
@@ -450,17 +451,17 @@ div.Header-jpeg
 }
 .artmenu a:hover .t
 {
-	color: #F4F5F0;
+	color: #4F91CD;
 }
 
 .artmenu li:hover a .t
 {
-	color: #3A4319;
+	color: #FFFFFF;
 }
 
 .artmenu li:hover>a .t
 {
-	color: #F4F5F0;
+	color: #4F91CD;
 }
 
 .artmenu a.active .l, .artmenu a.active .r
@@ -551,7 +552,7 @@ div.Header-jpeg
 
 .nav .artmenu ul li:hover>a span, .nav .artmenu ul li:hover>a span span
 {
-	color: #000000;
+	color: #4F91CD;
 }
 
 
@@ -672,7 +673,7 @@ div.Header-jpeg
 	left: 11px;
 	right: 11px;
 	bottom: 11px;
-	background-color: #EEEFE6;
+	background-color: #FFFFFF;
 }
 
 .Block
@@ -695,9 +696,10 @@ div.Header-jpeg
 .BlockHeader .t
 {
 	height: 30px;
-	color: #303815;
+	color: #FFFFFF;
 	font-family: Arial, Helvetica, Sans-Serif;
 	font-size: 13px;
+	font-weight: bold;
 	white-space : nowrap;
 	padding: 0 7px;
 	line-height: 30px;
@@ -967,15 +969,15 @@ a
 {
   font-family: Arial, Helvetica, Sans-Serif;
   text-decoration: none;
-  color: #000000;
+  color: #4F91CD;
 }
 
 /* :hover - adds special style to an element when you mouse over it. */
 a:hover, a.hover
 {
   font-family: Arial, Helvetica, Sans-Serif;
-  text-decoration: none;
-  color: #818F00;
+  text-decoration: underline;
+  color: #4F91CD;
 }
 
 /* Finish Content link style */
@@ -1326,9 +1328,9 @@ button.Button .btn.active .r
 .Footer .Footer-text a:hover
 {
 	text-decoration: none;
-	color: #BA4B1C;
+	color: #4F91CD;
 	font-family: Arial, Helvetica, Sans-Serif;
-	text-decoration: none;
+	text-decoration: underline;
 }
 /* end Footer */
 
