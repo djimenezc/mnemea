@@ -1,0 +1,7 @@
+
+1.- Instale el Programa, no lo inicie.
+2.- Copie el contenido de la Carpeta "ypogeios" y peguelo en "C:\Archivos de programa\Aleo Software\Flash Intro and Banner Maker" reemplaze si se requiere.
+3.- Combine el fichero "key.reg".
+
+Listo !!!!
+
