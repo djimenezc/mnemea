@@ -1,0 +1,378 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.    
+-->
+<project name="mnemea"
+         default="deployment-local">
+
+	<property file="build.${user.name}.properties" />
+
+	<property name="tpv.sql.driver" value="com.mysql.jdbc.Driver" />
+	<property name="tpv.sql.url"
+	          value="jdbc:mysql://${tpv.ip}/${tpv.sql.database.name}" />
+
+	<property name="local.sql.driver" value="${tpv.sql.driver}" />
+	<property name="local.sql.url"
+	          value="jdbc:mysql://localhost/${tpv.sql.database.name}" />
+
+	<target name="deployment-local"
+	        depends=""
+	        description="Build N2A project in local. The application can be found 
+						in ${n2a.standalone}">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+     ------------------------------------------
+      Generating local deployment : ${start.timestamp}
+     ------------------------------------------
+    </echo>
+
+		<!--<subant target="deploy" buildpathref="build-path" />
+		<subant target="unjar" buildpathref="build-path" />-->
+	</target>
+
+	<target name="deploy-jars-tpv"
+	        depends=""
+	        description="Deploy the jar of N2A project in the remote machine 
+						${tpv.ip}">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+			     ------------------------------------------
+				Deploy Core Jars N2A: ${start.timestamp}
+				Ip: ${tpv.ip}
+				Deploy Folder: ${tpv.deployFolder}
+			     ------------------------------------------
+		</echo>
+
+		<subant target="deploy" buildpathref="build-path" />
+		<subant target="unjar" buildpathref="build-path" />
+
+		<sshexec host="${tpv.ip}"
+		         username="${tpv.user}"
+		         password="${tpv.pass}"
+		         command="rm -r ${tpv.deployFolder}/lib; mkdir ${tpv.deployFolder}/lib" />
+
+		<scp todir="${tpv.user}@${tpv.ip}:${tpv.deployFolder}/lib"
+		     password="${tpv.pass}"
+		     trust="true">
+			<fileset dir="${n2a.standalone.lib}">
+				<include name="*.jar" />
+			</fileset>
+		</scp>
+	</target>
+
+	<target name="delete-N2A-tpv"
+		description="Delete the folder deployment in the remote machine ç
+					${tpv.ip}">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+			     ------------------------------------------
+				Delete remote N2A folder: ${start.timestamp}
+				Ip: ${tpv.ip}
+				Folder: ${tpv.deployFolder}
+			     ------------------------------------------
+		</echo>
+		<sshexec host="${tpv.ip}"
+		         username="${tpv.user}"
+		         password="${tpv.pass}"
+		         command="rm -r ${tpv.deployFolder}" />
+	</target>
+
+	<target name="create-folder-N2A-tpv"
+		description="Create the folder deployment in the remote machine
+					${tpv.ip}">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+			     ------------------------------------------
+				Create N2A folder: ${start.timestamp}
+				Ip: ${tpv.ip}
+				Folder: ${tpv.deployFolder}
+			     ------------------------------------------
+		</echo>
+
+		<sshexec host="${tpv.ip}"
+		         username="${tpv.user}"
+		         password="${tpv.pass}"
+		         command="mkdir ${tpv.deployFolder}" />
+	</target>
+	<target name="create-structure-N2A-tpv"
+	        depends="delete-N2A-tpv,create-folder-N2A-tpv"
+			description="Create the folder structure of N2A 
+						deployment in the remote machine ${tpv.ip}">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+			     ------------------------------------------
+				Create N2A folder structure: ${start.timestamp}
+				Ip: ${tpv.ip}
+				Folder: ${tpv.deployFolder}
+			     ------------------------------------------
+		</echo>
+		<sshexec host="${tpv.ip}"
+		         username="${tpv.user}"
+		         password="${tpv.pass}"
+		         command="mkdir ${tpv.deployFolder}/bin;
+						mkdir ${tpv.deployFolder}/etc;
+						mkdir ${tpv.deployFolder}/ext;
+						mkdir ${tpv.deployFolder}/lib;
+						mkdir ${tpv.deployFolder}/tools;
+						mkdir ${tpv.deployFolder}/var;
+						mkdir ${tpv.deployFolder}/var/log;
+						mkdir ${tpv.deployFolder}/var/data;
+						mkdir ${tpv.deployFolder}/var/data/communications;
+						mkdir ${tpv.deployFolder}/var/data/database;
+						mkdir ${tpv.deployFolder}/var/data/devices;
+						mkdir ${tpv.deployFolder}/var/data/communications/historyIn;
+						mkdir ${tpv.deployFolder}/var/data/communications/historyOut;
+						mkdir ${tpv.deployFolder}/var/data/communications/in; 
+						mkdir ${tpv.deployFolder}/var/data/communications/out;
+						mkdir ${tpv.deployFolder}/var/data/communications/temp;
+						mkdir ${tpv.deployFolder}/var/data/communications/logos;
+						mkdir ${tpv.deployFolder}/var/data/database/dump;
+						mkdir ${tpv.deployFolder}/var/data/devices/electronicJournal;
+						mkdir ${tpv.deployFolder}/var/data/devices/psc;
+						mkdir ${tpv.deployFolder}/var/data/devices/psc/backup;
+						mkdir ${tpv.deployFolder}/var/data/devices/psc/in;
+						mkdir ${tpv.deployFolder}/var/data/devices/psc/out;
+						mkdir ${tpv.deployFolder}/var/data/devices/electronicJournal/history;
+						mkdir ${tpv.deployFolder}/var/data/devices/electronicJournal/out;" />
+	</target>
+
+	<target name="deploy-N2A-tpv" depends="create-structure-N2A-tpv"
+		description="Deploy the folder ${n2a.standalone} in the folder ${tpv.deployFolder}
+					of the remote machine ${tpv.ip}">
+
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+	     ------------------------------------------
+		Deploy N2A : ${start.timestamp}
+		Ip: ${tpv.ip}
+		Folder: ${tpv.deployFolder}
+	     ------------------------------------------
+	    </echo>
+
+		<scp todir="${tpv.user}@${tpv.ip}:${tpv.deployFolder}/bin"
+		     password="${tpv.pass}"
+		     trust="true">
+			<fileset dir="${n2a.standalone}/bin">
+				<include name="**/*" />
+			</fileset>
+		</scp>
+
+		<scp todir="${tpv.user}@${tpv.ip}:${tpv.deployFolder}/etc"
+		     password="${tpv.pass}"
+		     trust="true">
+			<fileset dir="${n2a.standalone}/etc">
+				<include name="**/*" />
+			</fileset>
+		</scp>
+
+		<scp todir="${tpv.user}@${tpv.ip}:${tpv.deployFolder}/ext"
+		     password="${tpv.pass}"
+		     trust="true">
+			<fileset dir="${n2a.standalone}/ext">
+				<include name="**/*" />
+			</fileset>
+		</scp>
+
+		<scp todir="${tpv.user}@${tpv.ip}:${tpv.deployFolder}/lib"
+		     password="${tpv.pass}"
+		     trust="true">
+			<fileset dir="${n2a.standalone}/lib">
+				<include name="**/*" />
+			</fileset>
+		</scp>
+
+		<scp todir="${tpv.user}@${tpv.ip}:${tpv.deployFolder}/tools"
+		     password="${tpv.pass}"
+		     trust="true">
+			<fileset dir="${n2a.standalone}/tools">
+				<include name="**/*" />
+			</fileset>
+		</scp>
+
+		<scp todir="${tpv.user}@${tpv.ip}:${tpv.deployFolder}/var"
+		     password="${tpv.pass}"
+		     trust="true">
+			<fileset dir="${n2a.standalone}/var">
+				<include name="**/*" />
+			</fileset>
+		</scp>
+
+	</target>
+
+	<target name="kill-N2A-tpv"
+		description="Kill the java process in the remote machine 
+					${tpv.ip}">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+			     ------------------------------------------
+				Kill N2A process: ${start.timestamp}
+				Ip: ${tpv.ip}
+			     ------------------------------------------
+		</echo>
+
+		<sshexec host="${tpv.ip}"
+		         username="${tpv.user}"
+		         password="${tpv.pass}"
+		         command="pkill -9 java" />
+	</target>
+
+	<target name="runN2A-tpv" 
+		description="Start the N2A process in the remote machine 
+					${tpv.ip}">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+			     ------------------------------------------
+				Start N2A process: ${start.timestamp}
+				Ip: ${tpv.ip}
+			     ------------------------------------------
+		</echo>
+		
+		<sshexec host="${tpv.ip}"
+		         username="${tpv.user}"
+		         password="${tpv.pass}"
+		         command="pkill -9 java;
+						  chmod 755 ${tpv.deployFolder}/bin/run.sh;
+						  ${tpv.deployFolder}/bin/run.sh;" />
+	</target>
+
+	<target name="shutDown-tpv" 
+		description="Shutdown the the remote machine ${tpv.ip}">
+		<sshexec host="${tpv.ip}"
+		         username="${tpv.user}"
+		         password="${tpv.pass}"
+		         command="shutdown -h now" />
+	</target>
+
+	<target name="-load-database-fo-tpv"
+	        depends=""
+	        description="Load the N2A database in the remote machine
+						${tpv.ip}">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+		     ------------------------------------------
+				Load Database N2A : ${start.timestamp}
+				Ip: ${tpv.ip}
+		     ------------------------------------------
+	    </echo>
+
+		<sql driver="${tpv.sql.driver}"
+		     url="${tpv.sql.url}"
+		     userid="${tpv.sql.user}"
+		     password="${tpv.sql.pass}">
+			<transaction src="${bbdd.dir}/createDatabase.sql" />
+			<transaction src="${bbdd.dir}/create_fo.sql" />
+			<transaction src="${bbdd.dir}/dump_bd/bd_pruebas_na/dump_bd_bo_n2a.sql" />
+		</sql>
+	</target>
+
+	<target name="-load-database-fo"
+	        depends=""
+		 	description="Load the N2A database in local">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+		     ------------------------------------------
+		      Load Database N2A : ${start.timestamp}
+			  Ip: localhost
+		     ------------------------------------------
+		</echo>
+
+		<sql driver="${local.sql.driver}"
+		     url="${local.sql.url}"
+		     userid="${local.sql.user}"
+		     password="${local.sql.pass}">
+			<transaction src="${bbdd.dir}/createDatabase.sql" />
+			<transaction src="${bbdd.dir}/create_fo.sql" />
+			<transaction src="${bbdd.dir}/dump_bd/bd_pruebas_na/dump_bd_bo_n2a.sql" />
+		</sql>
+	</target>
+
+	<target name="load-data-database-fo"
+		        depends="-load-database-fo"
+			 	description="Load the frontoffice data in local">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+		     ------------------------------------------
+		      Load Data Frontoffice N2A : ${start.timestamp}
+		      Ip: Localhost
+		     ------------------------------------------
+		</echo>
+
+		<sql driver="${local.sql.driver}"
+			     url="${local.sql.url}"
+			     userid="${local.sql.user}"
+			     password="${local.sql.pass}">
+			<transaction src="${bbdd.dir}/Insert_Cashier.sql" />
+			<transaction src="${bbdd.dir}/Insert_Sale.sql" />
+		</sql>
+	</target>
+
+	<target name="load-data-database-fo-tpv"
+	        depends="-load-database-fo-tpv"
+	        description="Load the frontoffice data in local">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+		     ------------------------------------------
+		      Load Data Frontoffice N2A : ${start.timestamp}
+		      Ip: Localhost
+		     ------------------------------------------
+		</echo>
+
+		<sql driver="${tpv.sql.driver}"
+		     url="${tpv.sql.url}"
+		     userid="${tpv.sql.user}"
+		     password="${tpv.sql.pass}">
+			<transaction src="${bbdd.dir}/Insert_Cashier.sql" />
+			<transaction src="${bbdd.dir}/Insert_Sale.sql" />
+		</sql>
+	</target>
+</project>
