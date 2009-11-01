@@ -1,0 +1,20 @@
+.panels-flexible-column-2-main {
+  float: left;
+  width: 99%;
+}
+
+.panel-flexible-2-inside {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.panels-flexible-region-2-center {
+  float: left;
+  width: 99%;
+}
+
+.panels-flexible-row-2-main-row-inside {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
