@@ -37,7 +37,7 @@
      ------------------------------------------
       Generating local deployment : ${start.timestamp}
 	  Src dir= ${src.dir}
-	  Deploy dir= ${deploy.dir}
+	  Deploy dir= ${local.deploy.dir}
      ------------------------------------------
 		</echo>
 	
