@@ -91,4 +91,27 @@
 		
 	</target>
 	
+	<target name="deploy-bbdd-remote">
+	
+	<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+     ------------------------------------------
+      Deploy bbdd ${deploy.bbdd.deployFile.path}: ${start.timestamp}
+	  Url: ${deploy.bbdd.url}
+	  User: ${deploy.bbdd.user}
+	  Password: ${deploy.bbdd.password}
+     ------------------------------------------
+		</echo>
+		<sql driver="${deploy.bbdd.driver}"
+		     url="${deploy.bbdd.url}"
+		     userid="${deploy.bbdd.user}"
+		     password="${deploy.bbdd.password}">
+			<transaction src="${deploy.bbdd.deployFile.path}" />
+		</sql>
+		
+	</target>
+	
 </project>
