@@ -71,7 +71,7 @@
 		<copy todir="${local.deploy.sites.dir}/default">
 			<fileset dir="${sites.dir}/default">
 				<include name="settings.local.php" />
-				<exclude/>
+				<exclude />
 			</fileset>
 		</copy>
 
@@ -90,13 +90,15 @@
 		</copy>
 
 		<move tofile="${local.deploy.sites.dir}/default/settings.php"
-		      file="${local.deploy.sites.dir}/default/settings.local.php"/>
-		
+		      file="${local.deploy.sites.dir}/default/settings.local.php"
+		/>
+
 	</target>
 
+	
 
 	<target name="backup-bbdd-local">
-		<exec executable="${scripts.dir}\backup_mysql.bat">
+		<exec executable="${scripts.mysqldump}">
 			<arg value="${local.bbdd.name}" />
 			<arg value="${local.bbdd.backupFile.path}" />
 		</exec>
