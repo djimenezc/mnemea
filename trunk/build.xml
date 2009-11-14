@@ -63,13 +63,15 @@
 		<copy todir="${local.deploy.sites.dir}">
 			<fileset dir="${sites.dir}">
 				<include name="**/*.*" />
-				<include name=".svn" />
+				<exclude name=".svn" />
+				<exclude name="**/*.php" />
 			</fileset>
 		</copy>
 
-		<copy todir="${local.deploy.sites.dir}">
+		<copy todir="${local.deploy.sites.dir}/default">
 			<fileset dir="${sites.dir}/default">
 				<include name="settings.local.php" />
+				<exclude/>
 			</fileset>
 		</copy>
 
@@ -87,12 +89,9 @@
 			</fileset>
 		</copy>
 
-		<delete file="${local.deploy.sites.dir}/default/settings.php"/>
-
-		<move tofile="${sites.dir}/default/settings.local.php"
-		      file="${local.deploy.sites.dir}/default/settings.php"
-		>
-		</move>
+		<move tofile="${local.deploy.sites.dir}/default/settings.php"
+		      file="${local.deploy.sites.dir}/default/settings.local.php"/>
+		
 	</target>
 
 
