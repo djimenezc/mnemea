@@ -16,19 +16,31 @@
    specific language governing permissions and limitations
    under the License.    
 -->
-<project name="mnemea"
-         default="deploy-local">
+<project name="mnemea" default="deploy-local">
 
 	<property file="build.${user.name}.properties" />
 
 	<target name="undeploy-local">
-		<delete dir="${deploy.dir}"/>
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+		     ------------------------------------------
+		      Generating local undeployment : ${start.timestamp}
+			  Src dir= ${src.dir}
+			  Deploy dir= ${local.deploy.dir}
+		     ------------------------------------------
+		</echo>
+
+		<delete dir="${local.deploy.dir}" />
 	</target>
-	
+
 	<target name="deploy-local"
 	        depends="undeploy-local"
 	        description="Build N2A project in local. The application can be found 
-						in ${n2a.standalone}">
+						in ${n2a.standalone}"
+	>
 		<tstamp>
 			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
 		</tstamp>
@@ -40,60 +52,73 @@
 	  Deploy dir= ${local.deploy.dir}
      ------------------------------------------
 		</echo>
-	
+
 		<copy todir="${local.deploy.dir}">
 			<fileset dir="${drupal.dir}">
 				<include name="**/*.*" />
 				<include name=".svn" />
 			</fileset>
 		</copy>
-		
+
 		<copy todir="${local.deploy.sites.dir}">
 			<fileset dir="${sites.dir}">
 				<include name="**/*.*" />
 				<include name=".svn" />
 			</fileset>
 		</copy>
-		
+
+		<copy todir="${local.deploy.sites.dir}">
+			<fileset dir="${sites.dir}/default">
+				<include name="settings.local.php" />
+			</fileset>
+		</copy>
+
 		<copy todir="${local.deploy.modules.dir}">
 			<fileset dir="${modules.dir}">
 				<include name="**/*.*" />
 				<include name=".svn" />
 			</fileset>
 		</copy>
-				
+
 		<copy todir="${local.deploy.themes.dir}">
 			<fileset dir="${themes.dir}">
 				<include name="**/*.*" />
 				<include name=".svn" />
 			</fileset>
 		</copy>
-		
+
+		<delete file="${local.deploy.sites.dir}/default/settings.php"/>
+
+		<move tofile="${sites.dir}/default/settings.local.php"
+		      file="${local.deploy.sites.dir}/default/settings.php"
+		>
+		</move>
 	</target>
-	
+
 
 	<target name="backup-bbdd-local">
 		<exec executable="${scripts.dir}\backup_mysql.bat">
-			<arg value="${local.bbdd.name}"/>
-			<arg value="${local.bbdd.backupFile.path}"/>
+			<arg value="${local.bbdd.name}" />
+			<arg value="${local.bbdd.backupFile.path}" />
 		</exec>
 
 	</target>
-	
+
 	<target name="deploy-bbdd-local">
-	
+
 		<sql driver="${local.bbdd.driver}"
 		     url="${local.bbdd.url}"
 		     userid="${local.bbdd.user}"
-		     password="">
+		     password=""
+		>
 			<transaction src="${local.bbdd.deployFile.path}" />
 		</sql>
-		
+
 	</target>
-	
+
 	<target name="deploy-bbdd-remote">
-	
-	<tstamp>
+
+		<tstamp>
 			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
 		</tstamp>
 
@@ -108,10 +133,11 @@
 		<sql driver="${deploy.bbdd.driver}"
 		     url="${deploy.bbdd.url}"
 		     userid="${deploy.bbdd.user}"
-		     password="${deploy.bbdd.password}">
+		     password="${deploy.bbdd.password}"
+		>
 			<transaction src="${deploy.bbdd.deployFile.path}" />
 		</sql>
-		
+
 	</target>
-	
+
 </project>
