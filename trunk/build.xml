@@ -36,22 +36,167 @@
 		<delete dir="${local.deploy.dir}" />
 	</target>
 
-	<target name="deploy-local"
-	        depends="undeploy-local"
-	        description="Build N2A project in local. The application can be found 
-						in ${n2a.standalone}"
+	<target name="undeploy-remote">
+
+		<ftp action="del"
+		     server="${deploy.ftp.url}"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     remotedir="${deploy.ftp.remote.dir}"
+		     verbose="true"
+		>
+			<fileset>
+				<include name="**/*.*" />
+			</fileset>
+		</ftp>
+
+		<ftp action="rmdir"
+		     server="${deploy.ftp.url}"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     remotedir="${deploy.ftp.root.dir}"
+		     verbose="true"
+		>
+			<fileset>
+				<include name="mnemea/**/*" />
+				<include name="mnemea" />
+			</fileset>
+		</ftp>
+
+	</target>
+
+	<target name="create-folder-remote">
+		<ftp action="mkdir"
+		     server="${deploy.ftp.url}"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     remotedir="${deploy.ftp.remote.dir}"
+		     verbose="true"
+		>
+		</ftp>
+	</target>
+
+	<target name="deploy-clean-remote"
+	        depends="undeploy-remote,create-folder-remote,deploy-remote"
+	        description=""
 	>
+	</target>
+
+	<target name="deploy-remote" depends="" description="">
 		<tstamp>
 			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
 		</tstamp>
 
 		<echo>
      ------------------------------------------
-      Generating local deployment : ${start.timestamp}
+      Generating remote deployment : ${start.timestamp}
 	  Src dir= ${src.dir}
-	  Deploy dir= ${local.deploy.dir}
+	  Deploy dir= ${deploy.ftp.remote.dir}
      ------------------------------------------
 		</echo>
+
+		<ftp server="${deploy.ftp.url}"
+		     remotedir="${deploy.ftp.remote.dir}"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     depends="yes"
+		     verbose="true"
+		>
+			<fileset dir="${drupal.dir}">
+				<include name="**/*.*" />
+				<exclude name=".svn" />
+			</fileset>
+
+		</ftp>
+
+		<ftp server="${deploy.ftp.url}"
+		     remotedir="${deploy.ftp.remote.dir}/sites"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     depends="yes"
+		     verbose="true"
+		>
+			<fileset dir="${sites.dir}">
+				<include name="**/*.*" />
+				<exclude name=".svn" />
+				<exclude name="**/*.php" />
+			</fileset>
+		</ftp>
+		
+		<ftp server="${deploy.ftp.url}"
+		     remotedir="${deploy.ftp.remote.dir}/sites/default"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     depends="yes"
+		     verbose="true"
+		>
+			<fileset file="${sites.dir}/default/settings.php">
+				<include name="settings.remote.php" />
+				<exclude />
+			</fileset>
+		</ftp>
+
+		<ftp action="mkdir"
+		     server="${deploy.ftp.url}"
+		     remotedir="${deploy.ftp.remote.dir}/sites/all/modules"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     depends="yes"
+		     verbose="true"
+		>
+
+		</ftp>
+
+		<ftp server="${deploy.ftp.url}"
+		     remotedir="${deploy.ftp.remote.dir}/sites/all/modules"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     depends="yes"
+		     verbose="true"
+		>
+			<fileset dir="${modules.dir}">
+				<include name="**/*.*" />
+				<exclude name=".svn" />
+			</fileset>
+		</ftp>
+
+		<ftp action="mkdir"
+		     server="${deploy.ftp.url}"
+		     remotedir="${deploy.ftp.remote.dir}/sites/all/themes"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     depends="yes"
+		     verbose="true"
+		>
+
+		</ftp>
+
+		<ftp server="${deploy.ftp.url}"
+		     remotedir="${deploy.ftp.remote.dir}/sites/all/themes"
+		     userid="${deploy.ftp.user}"
+		     password="${deploy.ftp.password}"
+		     depends="yes"
+		     verbose="true"
+		>
+			<fileset dir="${themes.dir}">
+				<include name="**/*.*" />
+				<exclude name=".svn" />
+			</fileset>
+		</ftp>
+	</target>
+
+	<target name="deploy-local" depends="undeploy-local" description="">
+		<tstamp>
+			<format property="start.timestamp" pattern="dd-MMM-yy HH:mm:ss" />
+		</tstamp>
+
+		<echo>
+	     ------------------------------------------
+	      Generating local deployment : ${start.timestamp}
+		  Src dir= ${src.dir}
+		  Deploy dir= ${local.deploy.dir}
+	     ------------------------------------------
+			</echo>
 
 		<copy todir="${local.deploy.dir}">
 			<fileset dir="${drupal.dir}">
@@ -95,7 +240,6 @@
 
 	</target>
 
-	
 
 	<target name="backup-bbdd-local">
 		<exec executable="${scripts.mysqldump}">
